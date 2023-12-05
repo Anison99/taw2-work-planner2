@@ -10,6 +10,7 @@ import Profile from './components/Profile.js';
 import User from './components/User.js';
 import TimeRegister from './components/TimeRegister.js';
 import Navbar from './components/Navbar.js';
+import ProjectMeneger from './components/ProjectMeneger.js';
 function App() {
   return (
     <Router basename="/">
@@ -20,6 +21,7 @@ function App() {
         <Route path="/profile" element={<Profile />} />
         <Route path="/user" element={<User />} />
         <Route path="/time-register" element={<TimeRegister />} />
+        <Route path="/project-meneger" element={<ProjectMeneger />} />
       </Routes>
     </Router>
   );
