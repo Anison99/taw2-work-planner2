@@ -1,0 +1,76 @@
+.register-container {
+    text-align: center;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    height: 75vh; /* Opcjonalnie: wycentrowanie w pionie na całej stronie */
+  }
+    
+    .register-form {
+      background-color: #fff;
+      padding: 20px;
+      border-radius: 5px;
+      box-shadow: 0 0 10px rgba(0, 0, 0, 0.2);
+      text-align:left;
+      width: 500px;
+    }
+    
+    .register-form h2 {
+      font-size: 1.5rem;
+      margin-bottom: 20px;
+    }
+    
+    .form-group {
+      margin: 10px 0;
+    }
+    
+    label {
+      display: block;
+      font-weight: 600;
+      margin-bottom: 5px;
+    }
+    
+    input {
+      width: 100%;
+      padding: 10px;
+      border: 1px solid #ccc;
+      border-radius: 5px;
+    }
+    
+    .register-button {
+      background-color: #BD3F40;
+      color: #fff;
+      border: none;
+      border-radius: 5px;
+      padding: 10px 20px;
+      font-size: 1rem;
+      cursor: pointer;
+      transition: background-color 0.3s;
+    }
+    
+    .register-button:hover {
+      background-color: #0D2E40;
+    }
+    
+    .register-info {
+      text-align: center; /* Wyrównaj tekst do środka */
+      margin-top: 20px; /* Dodaj odstęp od formularza */
+    }
+    
+    .register-info p {
+      margin: 0; /* Usuń domyślne marginesy dla paragrafu */
+      font-size: 16px; /* Dostosuj rozmiar czcionki według potrzeb */
+    }
+    
+    .register-info a {
+      text-decoration: none; /* Usuń podkreślenie odnośniku */
+      color: #007BFF; /* Dostosuj kolor odnośnika */
+      font-weight: bold; /* Wyróżnij odnośnik pogrubieniem */
+    }
+    
+    /* Styl przy najechaniu na odnośnik */
+    .register-info a:hover {
+      text-decoration: underline; /* Dodaj podkreślenie przy najechaniu na odnośnik */
+    }
+    
