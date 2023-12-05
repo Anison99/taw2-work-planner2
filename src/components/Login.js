@@ -34,7 +34,7 @@ function Login() {
         console.log('Zalogowano:', data);
         localStorage.setItem('user', JSON.stringify(data));
         setUser(data);
-        navigate('/');
+        navigate('/profile');
       } else {
         const errorData = await response.json();
         setError(errorData.message); // Ustaw błąd zwrócony przez serwer
