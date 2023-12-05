@@ -142,6 +142,29 @@ app.post('/register', async (req, res) => {
   }
 });
 
+// Kod obsługi logowania użytkownika
+app.post('/login', async (req, res, next) => {
+    passport.authenticate('local', async (err, user, info) => {
+      try {
+        if (err) {
+          return res.status(500).json({ message: 'Internal Server Error' });
+        }
+        if (!user) {
+          return res.status(401).json({ message: 'Invalid credentials' });
+        }
+        req.logIn(user, (err) => {
+          if (err) {
+            return res.status(500).json({ message: 'Login failed' });
+          }
+          console.log('User logged in:', req.user.username);
+          return res.json({ message: 'Login successful' });
+        });
+      } catch (error) {
+        console.error('Login error:', error);
+        res.status(500).json({ message: 'Error during login' });
+      }
+    })(req, res, next);
+  });
 
 
 
