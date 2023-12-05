@@ -166,6 +166,69 @@ app.post('/login', async (req, res, next) => {
     })(req, res, next);
   });
 
+  // Rejestracja projektu
+app.post('/api/projects', async (req, res) => {
+  try {
+    const { nameOfProject, description } = req.body;
+    const userId = req.isAuthenticated() ? req.user.id : null;
+
+    const newProject = new Project({
+      userId,
+      nameOfProject,
+      description,
+    });
+
+    await newProject.save();
+
+    res.status(200).json({ message: 'Project save successful', projects: newProject });
+  } catch (error) {
+    console.error('Error creating project:', error);
+    res.status(500).json({ message: 'Error creating project' });
+  }
+});
+
+// Pobranie danych o projektach użytkownika
+app.get('/api/user/projects', async (req, res) => {
+  try {
+    if (!req.isAuthenticated()) {
+      return res.status(401).json({ message: 'Unauthorized' });
+    }
+
+    const userId = req.user.id;
+
+    const userProjects = await Project.find({ userId });
+
+    if (!userProjects || userProjects.length === 0) { // Dodatkowa zmiana
+      return res.status(404).json({ message: 'No projects found for this user' });
+    }
+
+    res.status(200).json({ projects: userProjects });
+  } catch (error) {
+    console.error('Error fetching user projects:', error);
+    res.status(500).json({ message: 'Error fetching user projects' });
+  }
+});
+
+// Endpoint do pobierania nazwy zalogowanego użytkownika
+app.get('/api/user', async (req, res) => {
+  try {
+    if (!req.isAuthenticated()) {
+      return res.status(401).json({ message: 'Unauthorized' });
+    }
+
+    const user = await User.findById(req.user.id);
+    
+    if (!user) {
+      return res.status(404).json({ message: 'User not found' });
+    }
+
+    // Zwracanie nazwy zalogowanego użytkownika
+    res.status(200).json({ username: user.username });
+  } catch (error) {
+    console.error('Error fetching user:', error);
+    res.status(500).json({ message: 'Error fetching user' });
+  }
+});
 
 
 // nasłuchiwanie serwera
