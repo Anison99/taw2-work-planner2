@@ -8,8 +8,7 @@ import '../css/TimeRegister.css';
 function TimeRegister() {
   const [startTime, setStartTime] = useState('');
   const [endTime, setEndTime] = useState('');
-  const [breakStartTime, setBreakStartTime] = useState('');
-  const [breakEndTime, setBreakEndTime] = useState('');
+  const [breaks, setBreaks] = useState([]); // Zmiana na tablicę przechowującą przerwy
   const [projectName, setProjectName] = useState('');
   const [projects, setProjects] = useState([]);
   const [isWorking, setIsWorking] = useState(false);
@@ -44,22 +43,32 @@ function TimeRegister() {
     if (!isOnBreak) {
       setEndTime(currentDate);
     } else {
-      setBreakEndTime(currentDate);
+      const updatedBreaks = breaks.map((breakItem, index) =>
+        index === breaks.length - 1
+          ? { ...breakItem, endBreakTime: currentDate }
+          : breakItem
+      );
+      setBreaks(updatedBreaks);
+      setIsOnBreak(false);
     }
   };
-  
-
 
   const handleStartBreak = () => {
     const currentDate = new Date().toLocaleString();
-    setBreakStartTime(currentDate);
+    const newBreak = { startBreakTime: currentDate, endBreakTime: '' }; // Nowa przerwa
     setIsOnBreak(true);
+    setBreaks([...breaks, newBreak]); // Dodanie nowej przerwy do tablicy przerw
   };
 
   const handleStopBreak = () => {
     const currentDate = new Date().toLocaleString();
-    setBreakEndTime(currentDate);
+    const updatedBreaks = breaks.map((breakItem, index) =>
+      index === breaks.length - 1
+        ? { ...breakItem, endBreakTime: currentDate }
+        : breakItem
+    );
     setIsOnBreak(false);
+    setBreaks(updatedBreaks);
   };
 
   const handleSubmit = async (e) => {
@@ -71,8 +80,7 @@ function TimeRegister() {
           startTime,
           endTime,
           projectName,
-          startBreakTime: breakStartTime,
-          endBreakTime: breakEndTime,
+          breaks,
         },
         { withCredentials: true }
       );
@@ -87,7 +95,6 @@ function TimeRegister() {
     }
   };
   
-
   return (
     <div>
       <Navbar />
@@ -96,8 +103,12 @@ function TimeRegister() {
         <p>Start Time: {startTime}</p>
         <p>End Time: {endTime}</p>
         <h2 className="time-header">Breaks</h2>
-        <p>Start Time: {breakStartTime}</p>
-        <p>End Time: {breakEndTime}</p>
+        {breaks.map((breakItem, index) => (
+          <div key={index}>
+            <p>Start Time: {breakItem.startBreakTime}</p>
+            <p>End Time: {breakItem.endBreakTime}</p>
+          </div>
+        ))}
         {!isWorking ? (
           <button className="btn btn-outline-success" onClick={handleStart}>Start</button>
         ) : (

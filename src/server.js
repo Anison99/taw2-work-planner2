@@ -53,8 +53,7 @@ const workLogsSchema = new mongoose.Schema({
   projectName: String,
   startTime: String,
   endTime: String,
-  startBreakTime: String,
-  endBreakTime: String,
+  breaks: [{ startBreakTime: String, endBreakTime: String }] // Tablica przerw
 });
 
 const WorkLog = mongoose.model('WorkLogs', workLogsSchema);
@@ -288,17 +287,16 @@ app.delete('/api/projects/:id', async (req, res) => {
 // Rejestracja czasu pracy
 app.post('/api/worklogs', async (req, res) => {
   try {
-    const { startTime, endTime, projectName, startBreakTime, endBreakTime } = req.body;
+    const { startTime, endTime, projectName, breaks } = req.body;
     const userId = req.isAuthenticated() ? req.user.id : null;
 
     const newWorkLog = new WorkLog({
       userId,
-      projectId: null, // Jeśli jest powiązany z projektem, można dodać jego ID tutaj
+      projectId: null,
       projectName,
       startTime,
       endTime,
-      startBreakTime,
-      endBreakTime,
+      breaks // Dodawanie tablicy przerw do nowego logu pracy
     });
 
     await newWorkLog.save();
