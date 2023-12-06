@@ -85,8 +85,6 @@ function Login() {
         </div>
         <button type="submit" class="btn btn-outline-primary">Zaloguj</button>
       </form>
-      <div>
-      </div>
     </div>
   )
 }
