@@ -1,0 +1,55 @@
+.time-container {
+    max-width: 800px;
+    margin: 0 auto;
+    padding: 20px;
+  }
+  
+  /* Nagłówek */
+  .time-header {
+    text-align: center;
+    margin-bottom: 20px;
+  }
+  
+  /* Style dla formularza */
+  .time-form {
+    margin-top: 20px;
+    padding: 20px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    height: 50vh;
+  }
+  
+  .time-form h2 {
+    margin-bottom: 15px;
+    font-size: 20px;
+  }
+  
+  .time-form label {
+    margin-bottom: 15px;
+    display: block;
+  }
+  
+  .time-form select,
+  .time-form input[type="text"] {
+    padding: 10px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    width: calc(100% - 22px);
+    /* uwzględnienie paddingu i bordera */
+  }
+  
+  .time-form button {
+    padding: 10px 20px;
+    border: none;
+    border-radius: 4px;
+    background-color: #3498db;
+    color: #fff;
+    cursor: pointer;
+    display: block;
+    width: 100%;
+    margin-top: 10px;
+  }
+  
+  .time-form button:hover {
+    background-color: #2980b9;
+  }
