@@ -285,6 +285,89 @@ app.delete('/api/projects/:id', async (req, res) => {
   }
 });
 
+// Rejestracja czasu pracy
+app.post('/api/worklogs', async (req, res) => {
+  try {
+    const { startTime, endTime, projectName, startBreakTime, endBreakTime } = req.body;
+    const userId = req.isAuthenticated() ? req.user.id : null;
+
+    const newWorkLog = new WorkLog({
+      userId,
+      projectId: null, // Jeśli jest powiązany z projektem, można dodać jego ID tutaj
+      projectName,
+      startTime,
+      endTime,
+      startBreakTime,
+      endBreakTime,
+    });
+
+    await newWorkLog.save();
+
+    res.status(200).json({ message: 'Time registered successfully', workLog: newWorkLog });
+  } catch (error) {
+    console.error('Error registering time:', error);
+    res.status(500).json({ message: 'Error registering time' });
+  }
+});
+
+// Pobranie danych o logach pracy użytkownika
+app.get('/api/user/worklogs', async (req, res) => {
+  try {
+    if (!req.isAuthenticated()) {
+      return res.status(401).json({ message: 'Unauthorized' });
+    }
+
+    const userId = req.user.id;
+
+    const userWorkLogs = await WorkLog.find({ userId });
+
+    if (!userWorkLogs || userWorkLogs.length === 0) {
+      return res.status(404).json({ message: 'No work logs found for this user' });
+    }
+
+    res.status(200).json({ workLogs: userWorkLogs });
+  } catch (error) {
+    console.error('Error fetching user work logs:', error);
+    res.status(500).json({ message: 'Error fetching user work logs' });
+  }
+});
+
+// Aktualizacja logu pracy
+app.put('/api/worklogs/:workLogId', async (req, res) => {
+  try {
+    const { startTime, endTime, projectName, startBreakTime, endBreakTime } = req.body;
+    const workLogId = req.params.workLogId;
+
+    const updatedWorkLog = await WorkLog.findByIdAndUpdate(
+      workLogId,
+      { startTime, endTime, projectName, startBreakTime, endBreakTime },
+      { new: true }
+    );
+
+    if (!updatedWorkLog) {
+      return res.status(404).json({ message: 'Work log not found' });
+    }
+
+    res.status(200).json({ message: 'Work log updated successfully', updatedWorkLog });
+  } catch (error) {
+    console.error('Error updating work log:', error);
+    res.status(500).json({ message: 'Error updating work log' });
+  }
+});
+
+// Usunięcie wybranego logu pracy
+app.delete('/api/worklogs/:id', async (req, res) => {
+  try {
+    const workLogId = req.params.id;
+
+    await WorkLog.findByIdAndRemove(workLogId);
+
+    res.status(200).json({ message: 'Work log deleted successfully' });
+  } catch (error) {
+    console.error('Error deleting work log:', error);
+    res.status(500).json({ message: 'Error deleting work log' });
+  }
+});
 
 // nasłuchiwanie serwera
 const port = process.env.PORT || 5000;
