@@ -1,15 +1,31 @@
-import React, { useState, useEffect, useContext } from 'react';
+import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import { useNavigate } from 'react-router-dom';
 import Navbar from './Navbar';
-import { TimeContext } from './TimeContext';
 
 function TimeRegister() {
   const [startTime, setStartTime] = useState('');
   const [endTime, setEndTime] = useState('');
   const [projectName, setProjectName] = useState('');
+  const [projects, setProjects] = useState([]);
   const [isWorking, setIsWorking] = useState(false);
   const navigate = useNavigate();
+
+  useEffect(() => {
+    // Pobranie projektów z bazy danych przy załadowaniu komponentu
+    const fetchProjects = async () => {
+      try {
+        const response = await axios.get('http://localhost:5000/api/user/projects', { withCredentials: true });
+        if (response.status === 200) {
+          setProjects(response.data.projects);
+        }
+      } catch (error) {
+        console.error('Error fetching projects:', error);
+      }
+    };
+
+    fetchProjects();
+  }, []);
 
   const handleStart = () => {
     const currentDate = new Date().toLocaleString();
@@ -60,9 +76,16 @@ function TimeRegister() {
       <form onSubmit={handleSubmit}>
         <label>
           Project Name:
-          <input type="text" value={projectName} onChange={(e) => setProjectName(e.target.value)} />
+          <select value={projectName} onChange={(e) => setProjectName(e.target.value)}>
+            <option value="">Select a project</option>
+            {projects.map((project) => (
+              <option key={project._id} value={project.nameOfProject}>
+                {project.nameOfProject}
+              </option>
+            ))}
+          </select>
         </label>
-        <button type="submit" disabled={!endTime}>
+        <button type="submit" disabled={!endTime || !projectName}>
           Register Time
         </button>
       </form>
