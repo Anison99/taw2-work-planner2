@@ -13,6 +13,8 @@ function TimeRegister() {
   const [projects, setProjects] = useState([]);
   const [isWorking, setIsWorking] = useState(false);
   const [isOnBreak, setIsOnBreak] = useState(false);
+  const [totalBreakTime, setTotalBreakTime] = useState(0); // Stan przechowujący łączny czas przerw
+
   const navigate = useNavigate();
 
   useEffect(() => {
@@ -39,7 +41,7 @@ function TimeRegister() {
   const handleStop = () => {
     const currentDate = new Date().toLocaleString();
     setIsWorking(false);
-  
+
     if (!isOnBreak) {
       setEndTime(currentDate);
     } else {
@@ -71,6 +73,24 @@ function TimeRegister() {
     setBreaks(updatedBreaks);
   };
 
+  // Funkcja do obliczania łącznego czasu przerw
+  const calculateTotalBreakTime = () => {
+    const total = breaks.reduce((acc, breakItem) => {
+      if (breakItem.endBreakTime) {
+        const start = new Date(breakItem.startBreakTime);
+        const end = new Date(breakItem.endBreakTime);
+        const diff = (end - start) / (1000 * 60); // Różnica w minutach
+        return acc + diff;
+      }
+      return acc;
+    }, 0);
+    const formattedTotal = total.toFixed(2);
+  setTotalBreakTime(parseFloat(formattedTotal));
+  };
+  useEffect(() => {
+    calculateTotalBreakTime();
+  }, [breaks]);
+
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
@@ -94,7 +114,7 @@ function TimeRegister() {
       console.error('Error registering time:', error);
     }
   };
-  
+
   return (
     <div>
       <Navbar />
@@ -120,6 +140,10 @@ function TimeRegister() {
               <button className="btn btn-outline-secondary" onClick={handleStopBreak}>End Break</button>
             )}
           </>
+        )}
+        <h2>Total Break Time: {totalBreakTime} minutes</h2>
+        {totalBreakTime > 30 && (
+          <p style={{ color: 'red' }}>Total break time exceeded 30 minutes!</p>
         )}
         <form className="time-form" onSubmit={handleSubmit}>
           <label>
